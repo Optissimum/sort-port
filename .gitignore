@@ -1,2 +1,5 @@
+env
 *.pyc
-env/
+*.db
+api_test.py
+Notes
