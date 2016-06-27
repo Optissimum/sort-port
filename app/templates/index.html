@@ -5,7 +5,7 @@
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="/static/materialize/css/materialize.min.css" media="screen,projection" />
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,19 +19,29 @@
                 <li><a href="{{link[0]}}">{{link[1]}}</a></li>
                 {% endfor %}
             </ul>
-            {% endif %} {% if minorLinks %}
-            <ul id="nav-mobile" class="side-nav"> {% for link in minorLinks %}
+            {% endif %}
+
+            {% if majorLinks %}
+            <ul id="nav-mobile" class="side-nav"> {% for link in majorLinks %}
                 <li><a href="{{link[0]}}">{{link[1]}}</a></li>
                 {% endfor %}
             </ul>
             {% endif %}
-            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+
+            {% if menuLinks %}
+            <a href="#" data-activates="nav-mobile" class="button-collapse">
+              <i class="material-icons">menu</i>
+              {% for link in menuLinks %}
+                <a href="{{link[0]}}">{{link[1]}}</a>
+              {% endfor %}
+            </a>
+            {% endif %}
         </div>
 
         {% block content %}{% endblock %}
         <!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script type="text/javascript" src="/static/materialize/js/materialize.min.js"></script>
 </body>
 
 </html>
