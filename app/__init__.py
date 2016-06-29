@@ -13,8 +13,8 @@ blueprint = make_google_blueprint(
 )
 
 # SQLAlchemy Setup
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-engine = create_engine("postgresql+psycopg2://user:password@/dbname")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 db = SQLAlchemy(app)
 
 from app import views
