@@ -1,0 +1,12 @@
+{% extends "view.html" %}
+{% block title %}
+- Edit
+{% endblock %}
+{% block edit %}
+<div class="well well-sm"><a class="btn" href="#">Apply</a>
+  <a class="btn" href="#">Cancel</a></div>
+  <div class="panel panel-default col-md-9 col-xs-offset-1">
+    <h1><input type="text" class="form form-control" name="name" value="{{item.name}}"></h1>
+    <h3><input type="textarea" class="form form-control col-md-4" name="desc" value="{{item.description}}"></h3>
+  </div>
+{% endblock %}

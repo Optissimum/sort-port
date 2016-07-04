@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block title %}
+- Edit
+{% endblock %}
+{% block content %}
+{% block edit %}
+<div class="panel panel-default col-md-9 col-xs-offset-1">
+  <h1>{{item['name'].title()}} <span class="badge">{{item['owner_email']}}</span></h1>
+  <h3>{{item['description']}} <small></small></h3>
+</div>
+{% endblock %}
+{% endblock %}

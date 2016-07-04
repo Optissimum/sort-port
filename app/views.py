@@ -14,7 +14,7 @@ app.register_blueprint(blueprint, url_prefix="/login")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'google.login'
+login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -61,3 +61,7 @@ def logout():
     logout_user()
     flash(msg)
     return redirect(url_for('catalog'))
+
+@app.route('/login/')
+def login():
+    return render_template('login.html')

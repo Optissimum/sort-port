@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(256))
 
 class OAuth(db.Model, OAuthConsumerMixin):
+    __tablename__ = 'oauth'
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     user = db.relationship(User)
 
