@@ -1,32 +1,59 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <!--Import Google Icon Font-->
-      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="static/materialize/css/materialize.min.css"  media="screen,projection"/>
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
 
-    <body>
-      <header>
-        <div class="container"><a href="#" data-activates="nav-mobile" class="button-collapse top-nav waves-effect waves-light circle hide-on-large-only"><i class="material-icons">menu</i></a></div>
-        <ul id="nav-mobile" class="side-nav fixed">
-          <li class="logo"><a id="logo-container" href="{{url_for('home')}}" class="brand-logo">
-            <h4><i id="front-page-logo" class="material-icons">settings_input_composite</i> Home</h4></a></li>
-        </ul>
+<head>
+  <meta charset="utf-8">
+  <title>Sort-Port
+    {% block title %}{% endblock %}
+  </title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% block header %}{% endblock %}
+</head>
 
-      </header>
-      <div class="container">
-        <div class="row">
-          <div class="col s12 m9">
-            <h1 class="header center-on-small-only">Sort Port</h1>
+<body>
+  <div>
+    <nav class="navbar navbar-default ">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href={{ url_for( 'catalog') }}><img style="width:auto;height:100%;" src={{ url_for( 'static', filename='images/logo.svg' ) }} alt="Sort-Port"/></a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="glyphicon glyphicon-menu-hamburger"></span>
+            </button>
+        </div>
+
+        <div class="navbar-collapse" id="navbar">
+          <ol class="breadcrumb navbar-nav navbar-form">
+            {% block breadcrumb %}
+              <li class="active">Categories</li>
+            {% endblock %}
+          </ol>
+          <ul class="nav navbar-right navbar-form">
+            <a class="btn" href={{url_for('google.login')}}>Login</a>
+            <a class="btn" href={{url_for('logout')}}>Logout</a>
+            </ul>
+            </div>
+            </div>
           </div>
         </div>
-      </div>
-      <!--Import jQuery before materialize.js-->
-      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script type="text/javascript" src="static/materialize/js/materialize.min.js"></script>
-    </body>
-  </html>
+      </nav>
+    </div>
+  </div>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes list-group" >
+    {% for message in messages %}
+      <li class="list-group-item list-group-item-danger">{{message}}!</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  {% endwith %}
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+  <script src={{ url_for('static', filename='js/jquery-2.2.0.min.js') }}></script>
+  <script src={{ url_for('static', filename='js/bootstrap.min.js') }}></script>
+  <script src={{ url_for('static', filename='js/dropdown-selector.js') }}></script>
+</body>
+
+</html>
