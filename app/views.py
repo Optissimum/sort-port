@@ -1,5 +1,6 @@
-from app import app, blueprint, db
-from flask import render_template, redirect, url_for, flash
+from app import app, blueprint, database
+from app.dbapi import *
+from flask import render_template, redirect, url_for, flash, request
 from flask_dance.contrib.google import google
 from flask_dance.consumer import oauth_authorized, oauth_error
 from sqlalchemy.orm.exc import NoResultFound
@@ -28,8 +29,46 @@ def load_user(user_id):
 @app.route('/index/',
            methods=['GET', 'POST'])
 def catalog():
-    return render_template('index.html')
+    return render_template('categorylist.html',
+                            categoryList = categoryList())
 
+@app.route('/add/', methods=['GET', 'POST'])
+@app.route('/catalog/add/', methods=['GET', 'POST'])
+def addItem():
+    form = models.ItemForm(request.form)
+    form.category.choices = [(category, category)
+                             for category in models.Item.query.group_by(models.Item.category)]
+    if request.method == 'POST' and form.validate():
+        try:
+            item = models.Item(name = form.name.data,
+                        category = form.category.data,
+                        description = form.description.data,
+                        user = form.owner.data)
+            database.session.add(item)
+            database.session.commit()
+            return redirect(url_for('viewItem',
+                                    category=form.category.data,
+                                    itemName=form.name.data))
+        except:
+            flash('The item {0} already exists within the {1}'
+                  ' category'.format(str(form.name).title(),
+                                     str(form.category).title()))
+    return render_template("add.html",
+                           form=form)
+
+@app.route('/catalog/<string:category>/<string:itemName>/')
+def viewItem(category, itemName):
+    # TODO create item dict
+    return render_template('view.html',
+                           item=item)
+
+@app.route('/catalog/<string:category>/')
+def viewCategory(category):
+    # TODO create category list
+    return render_template('view.html',
+                           item=item)
+
+# Login Classes
 @oauth_authorized.connect_via(blueprint)
 def google_logged_in(blueprint, token):
     if not token:
@@ -45,8 +84,8 @@ def google_logged_in(blueprint, token):
         except NoResultFound:
             # create a user
             user = models.User(email=email)
-            db.session.add(user)
-            db.session.commit()
+            database.session.add(user)
+            database.session.commit()
         login_user(user)
         flash("Successfully signed in with Google")
     else:

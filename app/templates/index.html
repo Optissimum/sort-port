@@ -29,8 +29,12 @@
             {% endblock %}
           </ol>
           <ul class="nav navbar-right navbar-form">
-            <a class="btn" href={{url_for('google.login')}}>Login</a>
-            <a class="btn" href={{url_for('logout')}}>Logout</a>
+            {% if current_user.is_authenticated %}
+              <a class="btn btn-default" href={{url_for('logout')}}>Logout</a>
+            {% else %}
+              <a class="btn btn-default" href={{url_for('login')}}>Login</a>
+            {% endif %}
+
             </ul>
             </div>
             </div>
@@ -43,7 +47,7 @@
   {% if messages %}
     <ul class="flashes list-group" >
     {% for message in messages %}
-      <li class="list-group-item list-group-item-danger">{{message}}!</li>
+      <li class="list-group-item list-group-item">{{message}}</li>
     {% endfor %}
     </ul>
   {% endif %}

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_sqlalchemy import SQLAlchemy
+from contextlib import contextmanager
 from secrets import *
 
 app = Flask(__name__)
@@ -17,6 +18,6 @@ blueprint = make_google_blueprint(
 # SQLAlchemy Setup
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
-db = SQLAlchemy(app)
+database = SQLAlchemy(app)
 
-from app import views, models
+from app import views, models, dbapi
