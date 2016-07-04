@@ -20,9 +20,9 @@ def database_session():
 
 def itemList(category=''):
     with database_session() as session:
-        '''Returns a dictionary of id, name, owner, and category
+        '''Returns a dictionary of id, name, user, and category
          sorted by category unless the category is defined, then
-         return id, name, owner sorted by name.'''
+         return id, name, user sorted by name.'''
         return session.query(Item).\
             filter(Item.category == category).order_by(Item.name).all()
 
@@ -31,65 +31,65 @@ def itemInfo(name, category):
         return session.query(Item).order_by(Item.name).\
             filter(Item.name == name, Item.category == category).first()
 
-def addItem(name, ownerEmail, category, description):
+def addItem(name, userEmail, category, description):
     '''Takes strings for ease of use'''
     with database_session() as session:
         if itemInfo(name, category) is not None:
             return Exception
         else:
             name = bleach.clean(name).lower()
-            ownerEmail = bleach.clean(ownerEmail).lower()
+            userEmail = bleach.clean(userEmail).lower()
             category = bleach.clean(category).lower()
             description = bleach.clean(description).lower()
             item = Item(name=name,
-                        owner_email=ownerEmail,
+                        user_email=userEmail,
                         category=category,
                         description=description)
             session.add(item)
             return True
 
-def editItem(id, name, ownerEmail, category):
+def editItem(id, name, userEmail, category):
     with database_session() as session:
-        if session.query(Item).filter(Item.owner_email):
+        if session.query(Item).filter(Item.user_email):
             session.update(Item).where(Item.id == id).value(
                 name=name, category=category)
 
-def removeItem(owner_id, item_id):
+def removeItem(user_id, item_id):
     with database_session() as session:
         session.delete(Item).filter(
-            Item.item.id == item_id, owner_id == Item.owner)
+            Item.item.id == item_id, user_id == Item.user)
 
-def addOwner(name, email):
+def addUser(name, email):
     with database_session() as session:
         bleach.clean(name, email)
-        if ownerExists(email):
-            owner = Owner(name=name, email=email)
-            session.add(owner)
+        if userExists(email):
+            user = User(name=name, email=email)
+            session.add(user)
             return True
         else:
             return False
 
-def removeOwner(owner_id):
+def removeUser(user_id):
     with database_session() as session:
-        session.delete(Owner).filter(owner_id == id)
+        session.delete(User).filter(user_id == id)
 
-def ownerList():
+def userList():
     with database_session() as session:
-        session.query(Owner).all()
+        session.query(User).all()
 
-def itemsByOwner(owner_id):
+def itemsByUser(user_id):
     with database_session() as session:
-        return session.query(Item, Owner).\
-            order_by(Item.name).filter(Item.owner == owner_id).all()
+        return session.query(Item, User).\
+            order_by(Item.name).filter(Item.user == user_id).all()
 
-def ownerOfItem(item_id):
+def userOfItem(item_id):
     with database_session() as session:
-        return session.query(Item, Owner).\
+        return session.query(Item, User).\
             order_by(Item.name).filter(Item.id == item_id).all()
 
-def ownerExists(email):
+def userExists(email):
     with database_session() as session:
-        return session.query(Owner).filter(Owner.email == email).first()
+        return session.query(User).filter(User.email == email).first()
 
 def categoryList():
     with database_session() as session:
