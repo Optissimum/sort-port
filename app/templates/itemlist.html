@@ -1,8 +1,7 @@
-{% extends "categorylist.html" %} {% block title %} - {{currentCategory}} {% endblock %} {% block breadcrumb %}
-<li>
-    <a class="" href={{ url_for( 'catalog') }}>Categories</a>
-</li>
-<li class="active">{{currentCategory}}</li>
+{% extends "categorylist.html" %} {% block title %} - {{currentCategory}} {% endblock %}
+{% block breadcrumb %}
+<li><a class="" href={{ url_for( 'catalog') }}>Categories</a></li>
+<li class="active">{{currentCategory.title()}}</li>
 {% endblock %} {% block content %}
 <div class="row">
     <div class="panel-default col-md-3">
