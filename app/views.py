@@ -34,18 +34,17 @@ def catalog():
 
 @app.route('/add/', methods=['GET', 'POST'])
 @app.route('/catalog/add/', methods=['GET', 'POST'])
+@login_required
 def addItem():
     form = models.ItemForm(request.form)
     form.category.choices = [(category, category)
-                             for category in models.Item.query.group_by(models.Item.category)]
+                             for category in categoryList()]
     if request.method == 'POST' and form.validate():
         try:
-            item = models.Item(name = form.name.data,
+            addItem(name = form.name.data,
                         category = form.category.data,
                         description = form.description.data,
-                        user = form.owner.data)
-            database.session.add(item)
-            database.session.commit()
+                        userEmail = form.owner.data)
             return redirect(url_for('viewItem',
                                     category=form.category.data,
                                     itemName=form.name.data))
@@ -58,17 +57,18 @@ def addItem():
 
 @app.route('/catalog/<string:category>/<string:itemName>/')
 def viewItem(category, itemName):
-    # TODO create item dict
     return render_template('view.html',
-                           item=item)
+                           item=itemInfo(name = itemName, category = category))
 
 @app.route('/catalog/<string:category>/')
 def viewCategory(category):
     # TODO create category list
-    return render_template('view.html',
-                           item=item)
+    return render_template('itemlist.html',
+                           category = categoryList(),
+                           items = itemList(category),
+                           currentCategory = category.title())  
 
-# Login Classes
+# Login views
 @oauth_authorized.connect_via(blueprint)
 def google_logged_in(blueprint, token):
     if not token:

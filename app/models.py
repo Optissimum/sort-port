@@ -1,7 +1,7 @@
-from app import app, database
+from app import app, database, blueprint, cache
 from flask_sqlalchemy import SQLAlchemy
 from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin, current_user
 from flask_wtf import Form
 from wtforms import TextField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, EqualTo, Length
@@ -37,7 +37,7 @@ class ItemForm(Form):
         'Item', validators=[DataRequired()]
     )
     category = SelectField(
-        'Category', validators=[]
+        'Category', validators=[DataRequired()]
     )
     owner = TextField(
         'Owner', validators=[DataRequired(), Length(min=6, max=40)]
@@ -54,3 +54,6 @@ class UserForm(Form):
     email = TextField(
         'Email', validators=[DataRequired(), Length(min=6, max=40)]
     )
+
+blueprint.backend = SQLAlchemyBackend(OAuth, database.session,
+                                      cache=cache, user=current_user)

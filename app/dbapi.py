@@ -20,16 +20,30 @@ def database_session():
 
 def itemList(category=''):
     with database_session() as session:
-        '''Returns a dictionary of id, name, user, and category
-         sorted by category unless the category is defined, then
+        '''Returns a list of dictionaries with id, name, user, and category
+         of each item, sorted by category unless the category is defined, then
          return id, name, user sorted by name.'''
-        return session.query(Item).\
-            filter(Item.category == category).order_by(Item.name).all()
+        list = []
+        for item in session.query(Item).\
+            filter(Item.category == category).order_by(Item.name).all():
+            list.append({
+                        'name':item.name,
+                        'user':item.user,
+                        'category':item.category,
+                       })
+        return list
 
 def itemInfo(name, category):
     with database_session() as session:
-        return session.query(Item).order_by(Item.name).\
-            filter(Item.name == name, Item.category == category).first()
+        query = session.query(Item).order_by(Item.name).\
+                filter(Item.name == name, Item.category == category).one()
+        item = {
+                'name':query.name,
+                'category':query.category,
+                'user':query.user,
+                'description':query.description
+               }
+        return item
 
 def addItem(name, userEmail, category, description):
     '''Takes strings for ease of use'''
@@ -59,20 +73,6 @@ def removeItem(user_id, item_id):
         session.delete(Item).filter(
             Item.item.id == item_id, user_id == Item.user)
 
-def addUser(name, email):
-    with database_session() as session:
-        bleach.clean(name, email)
-        if userExists(email):
-            user = User(name=name, email=email)
-            session.add(user)
-            return True
-        else:
-            return False
-
-def removeUser(user_id):
-    with database_session() as session:
-        session.delete(User).filter(user_id == id)
-
 def userList():
     with database_session() as session:
         session.query(User).all()
@@ -86,10 +86,6 @@ def userOfItem(item_id):
     with database_session() as session:
         return session.query(Item, User).\
             order_by(Item.name).filter(Item.id == item_id).all()
-
-def userExists(email):
-    with database_session() as session:
-        return session.query(User).filter(User.email == email).first()
 
 def categoryList():
     with database_session() as session:

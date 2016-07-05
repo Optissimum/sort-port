@@ -1,37 +1,23 @@
-{% extends "categorylist.html" %}
-{% block title %}
-  - {{query[0]['category']}}
-{% endblock %}
-{% block breadcrumb %}
+{% extends "categorylist.html" %} {% block title %} - {{currentCategory}} {% endblock %} {% block breadcrumb %}
 <li>
-  <a class="" href={{ url_for('catalog') }}>Categories</a>
+    <a class="" href={{ url_for( 'catalog') }}>Categories</a>
 </li>
-<li class="active">{{query[0]['category']}}</li>
-{% endblock %}
-{% block categoryList %}
-<div class="panel-heading"><div data-toggle="collapse" data-target="#categories">
-  {{query[0]['category']}}
-  </div>
-</div>
-<div class="panel-body collapse" id="categories">
-  {% for category in categoryList %}
-    {% if (query[0]['category'] == category) %}
-      <a class="list-group-item list-group-item-info" href="{{ url_for("viewCategory", category=category)}}">
-    {% else %}
-      <a class="list-group-item" href="{{ url_for("viewCategory", category=category)}}">
-    {% endif %}
-      {{category}}</a>
-      {% endfor %}
-    </div>
-{% endblock %}
-{% block itemList %}
-  {% for item in query %}
-    <a class="list-group-item" href="{{ url_for("viewItem", category=item['category'], itemName=item['name']) }}">
+<li class="active">{{currentCategory}}</li>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="panel-default col-md-3">
+        {% block categoryList %}
+        <div class="panel-body">
+            {% for category in categoryList %}
+            <a class="list-group-item" href="{{ url_for(" viewCategory ", category=category)}}">
+              {{category}}</a> {% endfor %}
+        </div>
+        {% endblock %} {% block itemList %} {% for item in items %}
+        <a class="list-group-item" href="{{ url_for("viewItem", category=item['category'], itemName=item['name']) }}">
       {{item['name']}}
       -
       <small>
         {{item['description']}}</small>
-      <span class="badge">{{item['owner_email']}}</span>
+      <span class="badge">{{item['user']}}</span>
     </a>
-  {% endfor %}
-{% endblock %}
+     {% endfor %} {% endblock %} {% endblock %}
