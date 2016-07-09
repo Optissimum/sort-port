@@ -1,6 +1,7 @@
 from app import app, database, blueprint, cache
 from flask_sqlalchemy import SQLAlchemy
-from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
+from flask_dance.consumer.backend.sqla import (OAuthConsumerMixin,
+                                               SQLAlchemyBackend)
 from flask_login import LoginManager, UserMixin, current_user
 from flask_wtf import Form
 from wtforms import TextField, TextAreaField, SelectField
@@ -17,10 +18,12 @@ class User(database.Model, UserMixin):
     first_name = database.Column(database.String(256))
     last_name = database.Column(database.String(256))
 
+
 class OAuth(database.Model, OAuthConsumerMixin):
     __tablename__ = 'oauth'
     user_id = database.Column(database.Integer, database.ForeignKey(User.id))
     user = database.relationship(User)
+
 
 class Item(database.Model):
     __tablename__ = 'item'
@@ -31,6 +34,7 @@ class Item(database.Model):
     category = database.Column(database.String(256))
     user_id = database.Column(database.Integer, database.ForeignKey('user.id'))
     user = database.relationship("User", uselist=False, backref="user")
+
 
 class ItemForm(Form):
     name = TextField(
