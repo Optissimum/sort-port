@@ -17,9 +17,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return models.User.query.get(int(user_id))
+
 
 # Created views
 @app.route('/',
@@ -30,7 +32,8 @@ def load_user(user_id):
            methods=['GET', 'POST'])
 def catalog():
     return render_template('categorylist.html',
-                            categoryList = categoryList())
+                           categoryList=categoryList())
+
 
 @app.route('/add/', methods=['GET', 'POST'])
 @app.route('/catalog/add/', methods=['GET', 'POST'])
@@ -41,10 +44,10 @@ def addItem():
                              for category in categoryList()]
     if request.method == 'POST' and form.validate():
         try:
-            addItem(name = form.name.data,
-                        category = form.category.data,
-                        description = form.description.data,
-                        userEmail = form.owner.data)
+            addItem(name=form.name.data,
+                    category=form.category.data,
+                    description=form.description.data,
+                    userEmail=form.owner.data)
             return redirect(url_for('viewItem',
                                     category=form.category.data,
                                     itemName=form.name.data))
@@ -55,18 +58,21 @@ def addItem():
     return render_template("add.html",
                            form=form)
 
+
 @app.route('/catalog/<string:category>/<string:itemName>/')
 def viewItem(category, itemName):
     return render_template('view.html',
-                           item=itemInfo(name = itemName, category = category))
+                           item=itemInfo(name=itemName, category=category))
+
 
 @app.route('/catalog/<string:category>/')
 def viewCategory(category):
     # TODO create category list
     return render_template('itemlist.html',
-                           category = categoryList(),
-                           items = itemList(category),
-                           currentCategory = category.title())  
+                           category=categoryList(),
+                           items=itemList(category),
+                           currentCategory=category.title())
+
 
 # Login views
 @oauth_authorized.connect_via(blueprint)
@@ -89,8 +95,10 @@ def google_logged_in(blueprint, token):
         login_user(user)
         flash("Successfully signed in with Google")
     else:
-        msg = "Failed to fetch user info from {name}".format(name=blueprint.name)
+        msg = "Failed to fetch user info from {name}".format(
+            name=blueprint.name)
         flash(msg, category="error")
+
 
 @app.route('/logout/')
 @login_required
@@ -100,6 +108,7 @@ def logout():
     logout_user()
     flash(msg)
     return redirect(url_for('catalog'))
+
 
 @app.route('/login/')
 def login():
