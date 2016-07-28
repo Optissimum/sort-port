@@ -19,7 +19,7 @@
     <div class="form-inline">
       {{ form.name(class = 'form-control first-input text-primary', value = itemName, placeholder = form.name.label.text, required = true, autofocus = true) }}
       {{ form.category(class = 'form-control text-primary', value = category, placeholder = form.category.label.text, autofocus = true) }}
-      {{ form.owner(class = 'form-control last-input', placeholder = form.owner.label.text, required = true, autofocus = true) }}
+      {{ form.user(class = 'form-control last-input', value = userEmail, required = true, autofocus = true) }}
     </div>
     {{ form.description(class = 'form-control', placeholder = form.description.label.text, required = true, autofocus = true) }}
   </form>

@@ -30,7 +30,7 @@ def itemList(category=''):
                 filter(Item.category == category).order_by(Item.name).all():
             list.append({
                         'name': item.name,
-                        'user': item.user,
+                        'user': item.user_email,
                         'category': item.category,
                         })
         return list
@@ -39,11 +39,11 @@ def itemList(category=''):
 def itemInfo(name, category):
     with database_session() as session:
         query = session.query(Item).order_by(Item.name).\
-            filter(Item.name == name, Item.category == category).one()
+            filter(Item.name == name, Item.category == category).first()
         item = {
             'name': query.name,
             'category': query.category,
-            'user': query.user,
+            'user': query.user_email,
             'description': query.description
         }
         return item
@@ -52,18 +52,22 @@ def itemInfo(name, category):
 def addItem(name, userEmail, category, description):
     '''Takes strings for ease of use'''
     with database_session() as session:
-        if itemInfo(name, category) is not None:
+        name = bleach.clean(name).lower()
+        userEmail = bleach.clean(userEmail).lower()
+        category = bleach.clean(category).lower()
+        description = bleach.clean(description).lower()
+
+        try:
+            itemInfo(name, category)
+            print 'Item already exists'
             return Exception
-        else:
-            name = bleach.clean(name).lower()
-            userEmail = bleach.clean(userEmail).lower()
-            category = bleach.clean(category).lower()
-            description = bleach.clean(description).lower()
+        except:
             item = Item(name=name,
                         user_email=userEmail,
                         category=category,
                         description=description)
             session.add(item)
+            print 'Item added'
             return True
 
 
@@ -101,3 +105,9 @@ def categoryList():
     with database_session() as session:
         query = session.query(Item).group_by(Item.category).all()
         return [item.category for item in query]
+
+
+def userList():
+    with database_session() as session:
+        query = session.query(User).all()
+        return [(user.name, user.email) for user in query]

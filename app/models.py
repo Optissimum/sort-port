@@ -12,11 +12,8 @@ class User(database.Model, UserMixin):
     __tablename__ = 'user'
 
     id = database.Column(database.Integer, primary_key=True)
-    username = database.Column(database.String(256), unique=True)
     email = database.Column(database.String(256), unique=True)
-    password = database.Column(database.String(256), unique=True)
-    first_name = database.Column(database.String(256))
-    last_name = database.Column(database.String(256))
+    name = database.Column(database.String(256))
 
 
 class OAuth(database.Model, OAuthConsumerMixin):
@@ -32,7 +29,7 @@ class Item(database.Model):
     name = database.Column(database.String(256))
     description = database.Column(database.String(256))
     category = database.Column(database.String(256))
-    user_id = database.Column(database.Integer, database.ForeignKey('user.id'))
+    user_email = database.Column(database.String(256), database.ForeignKey('user.email'))
     user = database.relationship("User", uselist=False, backref="user")
 
 
@@ -40,11 +37,11 @@ class ItemForm(Form):
     name = TextField(
         'Item', validators=[DataRequired()]
     )
-    category = SelectField(
+    category = TextField(
         'Category', validators=[DataRequired()]
     )
-    owner = TextField(
-        'Owner', validators=[DataRequired(), Length(min=6, max=40)]
+    user = SelectField(
+        'Owner', validators=[DataRequired()]
     )
     description = TextAreaField(
         'Description', validators=[DataRequired()]

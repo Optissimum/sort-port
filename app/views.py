@@ -1,5 +1,6 @@
 from app import app, blueprint, database
 from app.dbapi import *
+import app.dbapi as dbapi
 from flask import render_template, redirect, url_for, flash, request
 from flask_dance.contrib.google import google
 from flask_dance.consumer import oauth_authorized, oauth_error
@@ -9,6 +10,7 @@ from flask_login import (
     login_required, login_user, logout_user
 )
 import models
+
 
 # Flask Login and Dance setup and views
 app.register_blueprint(blueprint, url_prefix="/login")
@@ -40,14 +42,14 @@ def catalog():
 @login_required
 def addItem():
     form = models.ItemForm(request.form)
-    form.category.choices = [(category, category)
-                             for category in categoryList()]
-    if request.method == 'POST' and form.validate():
+    form.user.choices = userList()
+    if request.method == 'POST':
         try:
-            addItem(name=form.name.data,
-                    category=form.category.data,
-                    description=form.description.data,
-                    userEmail=form.owner.data)
+            form.validate_on_submit()
+            dbapi.addItem(form.name.data,
+                    form.user.data,
+                    form.category.data,
+                    form.description.data)
             return redirect(url_for('viewItem',
                                     category=form.category.data,
                                     itemName=form.name.data))
@@ -55,8 +57,7 @@ def addItem():
             flash('The item {0} already exists within the {1}'
                   ' category'.format(str(form.name).title(),
                                      str(form.category).title()))
-    return render_template("add.html",
-                           form=form)
+    return render_template("add.html", form=form)
 
 
 @app.route('/catalog/<string:category>/<string:itemName>/')
@@ -84,12 +85,13 @@ def google_logged_in(blueprint, token):
     resp = google.get("/plus/v1/people/me")
     if resp.ok:
         email = resp.json()["emails"][0]["value"]
+        name = resp.json()["name"]["givenName"]
         query = models.User.query.filter_by(email=email)
         try:
             user = query.one()
         except NoResultFound:
             # create a user
-            user = models.User(email=email)
+            user = models.User(email=email, name=name)
             database.session.add(user)
             database.session.commit()
         login_user(user)
@@ -103,8 +105,11 @@ def google_logged_in(blueprint, token):
 @app.route('/logout/')
 @login_required
 def logout():
-    resp = google.get("/plus/v1/people/me")
-    msg = "{name} logged out".format(name=resp.json()["emails"][0]["value"])
+    try:
+        resp = google.get("/plus/v1/people/me")
+        msg = "{name} logged out".format(name=resp.json()["emails"][0]["value"])
+    except:
+        msg = 'Logged out'
     logout_user()
     flash(msg)
     return redirect(url_for('catalog'))
