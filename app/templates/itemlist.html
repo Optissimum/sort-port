@@ -13,8 +13,7 @@
         </div>
         {% endblock %} {% block itemList %} {% for item in items %}
         <a class="list-group-item" href="{{ url_for("viewItem", category=item['category'], itemName=item['name']) }}">
-      {{item['name']}}
-      -
+      {{item['name'].title()}}
       <small>
         {{item['description']}}</small>
       <span class="badge">{{item['user']}}</span>
