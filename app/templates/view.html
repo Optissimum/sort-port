@@ -5,7 +5,7 @@
 {% block breadcrumb %}
 <li><a href="{{url_for('catalog')}}">Categories</a></li>
 <li><a href="{{ url_for("viewCategory", category=item['category'])}}">{{item['category'].title()}}</a></li>
-<li class="active">{{item['name']}}</li>
+<li class="active">{{item['name'].title()}}</li>
 {% endblock %}
 {% block content %}
 {% block edit %}
