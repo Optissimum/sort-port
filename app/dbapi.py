@@ -110,4 +110,4 @@ def categoryList():
 def userList():
     with database_session() as session:
         query = session.query(User).all()
-        return [(user.name, user.email) for user in query]
+        return [(user.email, user.name) for user in query]
