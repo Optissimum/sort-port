@@ -1,7 +1,7 @@
 from app import app, blueprint, database
 from app.dbapi import *
 import app.dbapi as dbapi
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_dance.contrib.google import google
 from flask_dance.consumer import oauth_authorized, oauth_error
 from sqlalchemy.orm.exc import NoResultFound
@@ -70,11 +70,9 @@ def editItem(category, itemName):
     if request.method == 'POST':
         form.validate_on_submit()
         if form.delete.data:
-            print 'Got the okay to delete'
             dbapi.removeItem(id=item['id'], userEmail=item['user'])
-            redirect(url_for('viewCategory', category=category))
+            redirect(url_for('catalog', ))
         elif form.submit.data:
-            print "Submit data worked"
             try:
                 dbapi.editItem(
                     itemName,
@@ -90,7 +88,6 @@ def editItem(category, itemName):
                 flash('The item {0} already exists within the {1}'
                       ' category'.format(str(form.name.data).title(),
                                          str(form.category.data).title()))
-        print 'nothing went through'
     return render_template('edit.html',
                            form=form,
                            item=item)
@@ -162,3 +159,9 @@ def logout():
 @app.route('/login/')
 def login():
     return render_template('login.html')
+
+
+# JSON views
+@app.route('/catalog/<string:category>/<string:itemName>/')
+def getItem(name, category):
+    return
