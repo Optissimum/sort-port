@@ -1,25 +1,17 @@
-{% extends "index.html" %}
-{% block title %}
-- View
-{% endblock %}
-{% block breadcrumb %}
+{% extends "index.html" %} {% block title %} - View {% endblock %} {% block breadcrumb %}
 <li><a href="{{url_for('catalog')}}">Categories</a></li>
 <li><a href="{{ url_for("viewCategory", category=item['category'])}}">{{item['category'].title()}}</a></li>
 <li class="active">{{item['name'].title()}}</li>
-{% endblock %}
-{% block content %}
-{% block edit %}
+{% endblock %} {% block content %} {% block edit %}
 <div class="panel panel-default col-md-9 col-xs-offset-1">
-  <h1>{{item['name'].title()}}
-    <span class="badge">{% if item['user'] == user: %}<body link='white'>
-      <a  class link="white" href="{{url_for("editItem", itemName=item["name"], category=item["category"])}}">EDIT</a>
-    </body>
+    <h1>{{item['name'].title()}}
+    <span class="badge">{% if item['user'] == user: %}
+      <a  class link="white" href="{{url_for("editItem", itemName=item["name"], category=item["category"])}}"><i class="icon-wrench icon-white"></i> Edit</a>
       {%else:%}
       {{item['user']}}</span>
       {% endif %}
     </h1>
 
-  <h3>{{item['description']}} <small></small></h3>
+    <h3>{{item['description']}} <small></small></h3>
 </div>
-{% endblock %}
-{% endblock %}
+{% endblock %} {% endblock %}
