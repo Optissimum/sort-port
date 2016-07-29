@@ -164,4 +164,8 @@ def login():
 # JSON views
 @app.route('/catalog/<string:category>/<string:itemName>/')
 def getItem(name, category):
-    return
+    item = itemInfo(name, category)
+    return jsonify(name=item['name'],
+                   category=item['category'],
+                   owner=item['user'],
+                   description=item['description'])
