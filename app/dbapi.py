@@ -38,9 +38,10 @@ def itemList(category=''):
 
 def itemInfo(name, category):
     with database_session() as session:
-        query = session.query(Item).order_by(Item.name).\
+        query = Item.query.order_by(Item.name).\
             filter(Item.name == name, Item.category == category).first()
         item = {
+            'id': query.id,
             'name': query.name,
             'category': query.category,
             'user': query.user_email,
@@ -84,10 +85,13 @@ def editItem(ogName, ogCategory, name, userEmail, category, description):
         item.description = description
 
 
-def removeItem(user_id, item_id):
+def removeItem(id, userEmail):
     with database_session() as session:
-        session.delete(Item).filter(
-            Item.item.id == item_id, user_id == Item.user)
+        item = Item.query.filter_by(id=id).first()
+        try:
+            if userEmail == item.user_email:
+                session.delete(item)
+        except:
 
 
 def userList():

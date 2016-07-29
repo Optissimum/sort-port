@@ -2,13 +2,12 @@
 {% block title %}
 - Edit
 {% endblock %}
-{% block edit %}<div class="">
-
-</div><form class="form col-md-8" action="" method="post">
+{% block edit %}<form class="form col-md-8" action="" method="post">
     <h3 class="form-heading">Editing {{item['name']}} in {{item['category']}}
     <div class="pull-right">
-      <button class="btn btn-default" type="submit" name="submit">Apply</button>
-      <a class="btn btn-default" href="{{url_for('catalog')}}">Cancel</a>
+      {{ form.submit(class='btn btn-primary') }}
+      <a class="btn btn-warning" href="{{url_for('catalog')}}">Cancel</a>
+      {{ form.delete(class='btn btn-danger') }}
     </div>
     </h3>
     <div class="form-inline">

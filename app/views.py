@@ -68,22 +68,29 @@ def editItem(category, itemName):
     form.user.choices = userList()
     item = itemInfo(itemName, category)
     if request.method == 'POST':
-        try:
-            form.validate_on_submit()
-            dbapi.editItem(
-                itemName,
-                category,
-                form.name.data,
-                form.user.data,
-                form.category.data,
-                form.description.data)
-            return redirect(url_for('viewItem',
-                                    itemName=form.name.data,
-                                    category=form.category.data))
-        except:
-            flash('The item {0} already exists within the {1}'
-                  ' category'.format(str(form.name.data).title(),
-                                     str(form.category.data).title()))
+        form.validate_on_submit()
+        if form.delete.data:
+            print 'Got the okay to delete'
+            dbapi.removeItem(id=item['id'], userEmail=item['user'])
+            redirect(url_for('viewCategory', category=category))
+        elif form.submit.data:
+            print "Submit data worked"
+            try:
+                dbapi.editItem(
+                    itemName,
+                    category,
+                    form.name.data,
+                    form.user.data,
+                    form.category.data,
+                    form.description.data)
+                return redirect(url_for('viewItem',
+                                        itemName=form.name.data,
+                                        category=form.category.data))
+            except:
+                flash('The item {0} already exists within the {1}'
+                      ' category'.format(str(form.name.data).title(),
+                                         str(form.category.data).title()))
+        print 'nothing went through'
     return render_template('edit.html',
                            form=form,
                            item=item)

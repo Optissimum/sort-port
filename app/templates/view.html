@@ -10,7 +10,15 @@
 {% block content %}
 {% block edit %}
 <div class="panel panel-default col-md-9 col-xs-offset-1">
-  <h1>{{item['name'].title()}} <span class="badge">{{item['user']}}</span></h1>
+  <h1>{{item['name'].title()}}
+    <span class="badge">{% if item['user'] == user: %}<body link='white'>
+      <a  class link="white" href="{{url_for("editItem", itemName=item["name"], category=item["category"])}}">EDIT</a>
+    </body>
+      {%else:%}
+      {{item['user']}}</span>
+      {% endif %}
+    </h1>
+
   <h3>{{item['description']}} <small></small></h3>
 </div>
 {% endblock %}

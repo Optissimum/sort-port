@@ -4,7 +4,7 @@ from flask_dance.consumer.backend.sqla import (OAuthConsumerMixin,
                                                SQLAlchemyBackend)
 from flask_login import LoginManager, UserMixin, current_user
 from flask_wtf import Form
-from wtforms import TextField, TextAreaField, SelectField
+from wtforms import TextField, TextAreaField, SelectField, SubmitField
 from wtforms.validators import DataRequired, EqualTo, Length
 
 
@@ -47,6 +47,8 @@ class ItemForm(Form):
     description = TextAreaField(
         'Description', validators=[DataRequired()]
     )
+    submit = SubmitField()
+    delete = SubmitField()
 
 
 class UserForm(Form):
