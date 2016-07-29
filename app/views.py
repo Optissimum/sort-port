@@ -115,7 +115,7 @@ def viewCategory(category):
                            currentCategory=category.title())
 
 
-# Login views
+# Login views, partially pulled from flask-dance quick-start example
 @oauth_authorized.connect_via(blueprint)
 def google_logged_in(blueprint, token):
     if not token:
