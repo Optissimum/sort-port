@@ -75,7 +75,7 @@ def editItem(ogName, ogCategory, name, userEmail, category, description):
         userEmail = bleach.clean(userEmail).lower()
         category = bleach.clean(category).lower()
         description = bleach.clean(description).lower()
-        
+
         item = Item.query.filter(
             name == ogName, category == ogCategory).first()
         item.name = name

@@ -29,7 +29,8 @@ class Item(database.Model):
     name = database.Column(database.String(256))
     description = database.Column(database.String(256))
     category = database.Column(database.String(256))
-    user_email = database.Column(database.String(256), database.ForeignKey('user.email'))
+    user_email = database.Column(database.String(
+        256), database.ForeignKey('user.email'))
     user = database.relationship("User", uselist=False, backref="user")
 
 

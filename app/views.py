@@ -47,10 +47,10 @@ def addItem():
         try:
             form.validate_on_submit()
             dbapi.addItem(
-                    form.name.data,
-                    form.user.data,
-                    form.category.data,
-                    form.description.data)
+                form.name.data,
+                form.user.data,
+                form.category.data,
+                form.description.data)
             return redirect(url_for('viewItem',
                                     category=form.category.data,
                                     itemName=form.name.data))
@@ -71,12 +71,12 @@ def editItem(category, itemName):
         try:
             form.validate_on_submit()
             dbapi.editItem(
-                    itemName,
-                    category,
-                    form.name.data,
-                    form.user.data,
-                    form.category.data,
-                    form.description.data)
+                itemName,
+                category,
+                form.name.data,
+                form.user.data,
+                form.category.data,
+                form.description.data)
             return redirect(url_for('viewItem',
                                     itemName=form.name.data,
                                     category=form.category.data))
@@ -85,8 +85,8 @@ def editItem(category, itemName):
                   ' category'.format(str(form.name.data).title(),
                                      str(form.category.data).title()))
     return render_template('edit.html',
-                            form=form,
-                            item = item)
+                           form=form,
+                           item=item)
 
 
 @app.route('/catalog/<string:category>/<string:itemName>/')
@@ -94,7 +94,7 @@ def viewItem(category, itemName):
     user = google.get("/plus/v1/people/me").json()["emails"][0]["value"]
     return render_template('view.html',
                            item=itemInfo(name=itemName, category=category),
-                           user = user)
+                           user=user)
 
 
 @app.route('/catalog/<string:category>/')
@@ -138,7 +138,8 @@ def google_logged_in(blueprint, token):
 def logout():
     try:
         resp = google.get("/plus/v1/people/me")
-        msg = "{name} logged out".format(name=resp.json()["emails"][0]["value"])
+        msg = "{name} logged out".format(
+            name=resp.json()["emails"][0]["value"])
     except:
         msg = 'Logged out'
     logout_user()
