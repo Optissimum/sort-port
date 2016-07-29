@@ -91,7 +91,12 @@ def editItem(category, itemName):
 
 @app.route('/catalog/<string:category>/<string:itemName>/')
 def viewItem(category, itemName):
-    user = google.get("/plus/v1/people/me").json()["emails"][0]["value"]
+    user = ''
+    try:
+        user = google.get("/plus/v1/people/me").json()["emails"][0]["value"]
+    except:
+        flash('To edit this item, please log in')
+
     return render_template('view.html',
                            item=itemInfo(name=itemName, category=category),
                            user=user)
