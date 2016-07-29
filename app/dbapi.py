@@ -59,7 +59,6 @@ def addItem(name, userEmail, category, description):
 
         try:
             itemInfo(name, category)
-            print 'Item already exists'
             return Exception
         except:
             item = Item(name=name,
@@ -67,15 +66,22 @@ def addItem(name, userEmail, category, description):
                         category=category,
                         description=description)
             session.add(item)
-            print 'Item added'
             return True
 
 
-def editItem(id, name, userEmail, category):
+def editItem(ogName, ogCategory, name, userEmail, category, description):
     with database_session() as session:
-        if session.query(Item).filter(Item.user_email):
-            session.update(Item).where(Item.id == id).value(
-                name=name, category=category)
+        name = bleach.clean(name).lower()
+        userEmail = bleach.clean(userEmail).lower()
+        category = bleach.clean(category).lower()
+        description = bleach.clean(description).lower()
+        
+        item = Item.query.filter(
+            name == ogName, category == ogCategory).first()
+        item.name = name
+        item.userEmail = userEmail
+        item.category = category
+        item.description = description
 
 
 def removeItem(user_id, item_id):

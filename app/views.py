@@ -46,7 +46,8 @@ def addItem():
     if request.method == 'POST':
         try:
             form.validate_on_submit()
-            dbapi.addItem(form.name.data,
+            dbapi.addItem(
+                    form.name.data,
                     form.user.data,
                     form.category.data,
                     form.description.data)
@@ -55,15 +56,47 @@ def addItem():
                                     itemName=form.name.data))
         except:
             flash('The item {0} already exists within the {1}'
-                  ' category'.format(str(form.name).title(),
-                                     str(form.category).title()))
+                  ' category'.format(str(form.name.data).title(),
+                                     str(form.category.data).title()))
     return render_template("add.html", form=form)
+
+
+@app.route('/catalog/<string:category>/<string:itemName>/edit', methods=['GET', 'POST'])
+@login_required
+def editItem(category, itemName):
+    form = models.ItemForm(request.form)
+    form.user.choices = userList()
+    item = itemInfo(itemName, category)
+    if request.method == 'POST':
+        try:
+            form.validate_on_submit()
+            print 'Validated'
+            dbapi.editItem(
+                    itemName,
+                    category,
+                    form.name.data,
+                    form.user.data,
+                    form.category.data,
+                    form.description.data)
+            print 'Item edited'
+            return redirect(url_for('viewItem',
+                                    itemName=form.name.data,
+                                    category=form.category.data))
+        except:
+            flash('The item {0} already exists within the {1}'
+                  ' category'.format(str(form.name.data).title(),
+                                     str(form.category.data).title()))
+    return render_template('edit.html',
+                            form=form,
+                            item = item)
 
 
 @app.route('/catalog/<string:category>/<string:itemName>/')
 def viewItem(category, itemName):
+    user = google.get("/plus/v1/people/me").json()["emails"][0]["value"]
     return render_template('view.html',
-                           item=itemInfo(name=itemName, category=category))
+                           item=itemInfo(name=itemName, category=category),
+                           user = user)
 
 
 @app.route('/catalog/<string:category>/')

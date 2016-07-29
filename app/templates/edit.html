@@ -2,11 +2,20 @@
 {% block title %}
 - Edit
 {% endblock %}
-{% block edit %}
-<div class="well well-sm"><a class="btn" href="#">Apply</a>
-  <a class="btn" href="#">Cancel</a></div>
-  <div class="panel panel-default col-md-9 col-xs-offset-1">
-    <h1><input type="text" class="form form-control" name="name" value="{{item.name}}"></h1>
-    <h3><input type="textarea" class="form form-control col-md-4" name="desc" value="{{item.description}}"></h3>
-  </div>
+{% block edit %}<div class="">
+
+</div><form class="form col-md-8" action="" method="post">
+    <h3 class="form-heading">Editing {{item['name']}} in {{item['category']}}
+    <div class="pull-right">
+      <button class="btn btn-default" type="submit" name="submit">Apply</button>
+      <a class="btn btn-default" href="{{url_for('catalog')}}">Cancel</a>
+    </div>
+    </h3>
+    <div class="form-inline">
+      {{ form.name(class = 'form-control first-input text-primary', value = item['name'], placeholder = item['name'], required = true, autofocus = true) }}
+      {{ form.category(class = 'form-control text-primary', value = item['category'], placeholder = item['category'], autofocus = true) }}
+      {{ form.user(class = 'form-control last-input', value = item['user'], required = true, autofocus = true, placeholder = item['user']) }}
+    </div>
+    {{ form.description(class = 'form-control', value = item['description'], placeholder = item['description'], required = true, autofocus = true) }}
+  </form>
 {% endblock %}
