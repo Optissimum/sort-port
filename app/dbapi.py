@@ -88,11 +88,8 @@ def editItem(ogName, ogCategory, name, userEmail, category, description):
 def removeItem(id, userEmail):
     with database_session() as session:
         item = Item.query.filter_by(id=id).first()
-        try:
             if userEmail == item.user_email:
                 session.delete(item)
-        except:
-
 
 def userList():
     with database_session() as session:
