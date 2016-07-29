@@ -70,7 +70,6 @@ def editItem(category, itemName):
     if request.method == 'POST':
         try:
             form.validate_on_submit()
-            print 'Validated'
             dbapi.editItem(
                     itemName,
                     category,
@@ -78,7 +77,6 @@ def editItem(category, itemName):
                     form.user.data,
                     form.category.data,
                     form.description.data)
-            print 'Item edited'
             return redirect(url_for('viewItem',
                                     itemName=form.name.data,
                                     category=form.category.data))
