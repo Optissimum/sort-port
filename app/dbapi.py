@@ -31,7 +31,7 @@ def itemList(category=''):
             list.append({
                         'name': item.name,
                         'user': item.user_email,
-                        'category': item.category,
+                        'category': item.category_name,
                         })
         return list
 
@@ -53,29 +53,23 @@ def itemInfo(name, category):
             raise
 
 
-
 def addItem(name, userEmail, category, description):
     '''Takes strings for ease of use'''
     with database_session() as session:
-        print 'about to try'
         name = bleach.clean(name).lower()
         userEmail = bleach.clean(userEmail).lower()
         category = bleach.clean(category).lower()
         description = bleach.clean(description).lower()
-        print 'about to cry'
         try:
             itemInfo(name, category)
             return False
         except:
-            print 'success!'
             addCategory(category)
-            print 'category added'
             item = Item(name=name,
                         user_email=userEmail,
                         category_name=category,
                         description=description)
             session.add(item)
-            print 'success!'
             return True
 
 
@@ -100,6 +94,7 @@ def removeItem(id, userEmail):
         if userEmail == item.user_email:
             session.delete(item)
 
+
 def userList():
     with database_session() as session:
         session.query(User).all()
@@ -116,15 +111,21 @@ def userOfItem(item_id):
         return session.query(Item, User).\
             order_by(Item.name).filter(Item.id == item_id).all()
 
+
 def addCategory(category):
     with database_session() as session:
-        category = Category(name = category.lower())
-        session.add(category)
+        category = Category(name=category.lower())
+        if session.query(Category).one():
+            pass
+        else:
+            session.add(category)
+
 
 def categoryList():
     with database_session() as session:
         query = session.query(Category).all()
         return [category.name for category in query]
+
 
 def userList():
     with database_session() as session:
