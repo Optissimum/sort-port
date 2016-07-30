@@ -30,9 +30,9 @@ class Item(database.Model):
     name = database.Column(database.String(256))
     description = database.Column(database.String(256))
     category_name = database.Column(database.String(256),
-                                  database.ForeignKey('category.name'))
-    category = database.relationship(
-        "Category", uselist=False, backref="category")
+                                    database.ForeignKey('category.name'))
+    category = database.relationship('Category', backref='category')
+
     user_email = database.Column(database.String(256),
                                  database.ForeignKey('user.email'))
     user = database.relationship("User", uselist=False, backref="user")
@@ -43,7 +43,7 @@ class Category(database.Model):
 
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(256), unique=True)
-
+  
 
 class ItemForm(Form):
     name = TextField(
