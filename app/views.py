@@ -1,6 +1,9 @@
 from app import app, blueprint, database
 import app.dbapi as dbapi
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import (
+    render_template, redirect,
+    url_for, flash, request,
+    jsonify, abort)
 from flask_dance.contrib.google import google
 from flask_dance.consumer import oauth_authorized, oauth_error
 from sqlalchemy.orm.exc import NoResultFound
@@ -61,7 +64,7 @@ def addItem():
         except:
             flash('Error adding {0}. Maybe it already exists within the {1}'
                   ' category?'.format(str(form.name.data).title(),
-                                     str(form.category.data).title()))
+                                      str(form.category.data).title()))
     return render_template("add.html", form=form)
 
 
@@ -70,7 +73,10 @@ def addItem():
 def editItem(category, itemName):
     form = models.ItemForm(request.form)
     form.user.choices = dbapi.userList()
-    item = dbapi.itemInfo(itemName, category)
+    try:
+        item = dbapi.itemInfo(itemName, category)
+    except AttributeError:
+        abort(404)
     if request.method == 'POST':
         form.validate_on_submit()
         if form.delete.data:
@@ -100,7 +106,10 @@ def editItem(category, itemName):
 @app.route('/catalog/<string:category>/<string:itemName>/')
 def viewItem(category, itemName):
     user = ''
-    item= dbapi.itemInfo(name=itemName, category=category)
+    try:
+        item = dbapi.itemInfo(name=itemName, category=category)
+    except AttributeError:
+        abort(404)
     try:
         user = google.get("/plus/v1/people/me").json()["emails"][0]["value"]
     except:
@@ -114,10 +123,13 @@ def viewItem(category, itemName):
 @app.route('/catalog/<string:category>/')
 def viewCategory(category):
     # TODO create category list
-    return render_template('itemlist.html',
-                           category=dbapi.categoryList(),
-                           items=dbapi.itemList(category),
-                           currentCategory=category.title())
+    try:
+        return render_template('itemlist.html',
+                               category=dbapi.categoryList(),
+                               items=dbapi.itemList(category),
+                               currentCategory=category.title())
+    except AttributeError:
+        abort()
 
 
 # Login views, partially pulled from flask-dance quick-start example
@@ -174,6 +186,7 @@ def getItem(name, category):
                    category=item['category'],
                    owner=item['user'],
                    description=item['description'])
+
 
 @app.route('/catalog/<string:category>/json')
 def getCategory(category):
