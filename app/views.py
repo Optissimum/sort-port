@@ -69,7 +69,7 @@ def addItem():
 @login_required
 def editItem(category, itemName):
     form = models.ItemForm(request.form)
-    form.user.choices = userList()
+    form.user.choices = dbapi.userList()
     item = dbapi.itemInfo(itemName, category)
     if request.method == 'POST':
         form.validate_on_submit()
