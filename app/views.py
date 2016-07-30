@@ -162,10 +162,17 @@ def login():
 
 
 # JSON views
-@app.route('/catalog/<string:category>/<string:itemName>/')
+@app.route('/catalog/<string:category>/<string:itemName>/json')
 def getItem(name, category):
     item = itemInfo(name, category)
     return jsonify(name=item['name'],
                    category=item['category'],
                    owner=item['user'],
                    description=item['description'])
+
+@app.route('/catalog/<string:category>/json')
+def getItem(category):
+    category = itemList(category)
+    return jsonify(name=item['name'],
+                   category=item['category'],
+                   owner=item['user'])
