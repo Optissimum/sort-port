@@ -18,6 +18,7 @@ class User(database.Model, UserMixin):
 
 class OAuth(database.Model, OAuthConsumerMixin):
     __tablename__ = 'oauth'
+    
     user_id = database.Column(database.Integer, database.ForeignKey(User.id))
     user = database.relationship(User)
 
@@ -28,10 +29,18 @@ class Item(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(256))
     description = database.Column(database.String(256))
-    category = database.Column(database.String(256))
+    category = database.relationship("Category", uselist=True, backref="category")
     user_email = database.Column(database.String(
         256), database.ForeignKey('user.email'))
     user = database.relationship("User", uselist=False, backref="user")
+
+
+class Category(database.Model):
+    __tablename__ = 'category'
+
+    id = database.Column(database.Integer, primary_key=True)
+    name = database.Column(database.String(256), unique=True)
+
 
 
 class ItemForm(Form):
