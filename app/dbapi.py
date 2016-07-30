@@ -27,7 +27,7 @@ def itemList(category=''):
          return id, name, user sorted by name.'''
         list = []
         for item in session.query(Item).\
-                filter(Item.category == category).order_by(Item.name).all():
+                filter(Item.category_name == category).order_by(Item.name).all():
             list.append({
                         'name': item.name,
                         'user': item.user_email,
@@ -39,7 +39,7 @@ def itemList(category=''):
 def itemInfo(name, category):
     with database_session() as session:
         query = Item.query.order_by(Item.name).\
-            filter(Item.name == name, Item.category == category).first()
+            filter(Item.name == name, Item.category_name == category).first()
         item = {
             'id': query.id,
             'name': query.name,
@@ -88,8 +88,8 @@ def editItem(ogName, ogCategory, name, userEmail, category, description):
 def removeItem(id, userEmail):
     with database_session() as session:
         item = Item.query.filter_by(id=id).first()
-            if userEmail == item.user_email:
-                session.delete(item)
+        if userEmail == item.user_email:
+            session.delete(item)
 
 def userList():
     with database_session() as session:
@@ -110,7 +110,7 @@ def userOfItem(item_id):
 
 def categoryList():
     with database_session() as session:
-        query = session.query(Item).group_by(Item.category).all()
+        query = session.query(Item).group_by(Item.category_name).all()
         return [item.category for item in query]
 
 
