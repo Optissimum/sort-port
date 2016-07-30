@@ -1,6 +1,6 @@
 from app import app, database
 import bleach
-from models import User, Item
+from models import User, Item, Category
 from contextlib import contextmanager
 from oauth2client import client
 
@@ -40,33 +40,42 @@ def itemInfo(name, category):
     with database_session() as session:
         query = Item.query.order_by(Item.name).\
             filter(Item.name == name, Item.category_name == category).first()
-        item = {
-            'id': query.id,
-            'name': query.name,
-            'category': query.category,
-            'user': query.user_email,
-            'description': query.description
-        }
-        return item
+        try:
+            item = {
+                'id': query.id,
+                'name': query.name,
+                'category': query.category_name,
+                'user': query.user_email,
+                'description': query.description
+            }
+            return item
+        except AttributeError as e:
+            raise
+
 
 
 def addItem(name, userEmail, category, description):
     '''Takes strings for ease of use'''
     with database_session() as session:
+        print 'about to try'
         name = bleach.clean(name).lower()
         userEmail = bleach.clean(userEmail).lower()
         category = bleach.clean(category).lower()
         description = bleach.clean(description).lower()
-
+        print 'about to cry'
         try:
             itemInfo(name, category)
-            return Exception
+            return False
         except:
+            print 'success!'
+            addCategory(category)
+            print 'category added'
             item = Item(name=name,
                         user_email=userEmail,
-                        category=category,
+                        category_name=category,
                         description=description)
             session.add(item)
+            print 'success!'
             return True
 
 
@@ -107,12 +116,15 @@ def userOfItem(item_id):
         return session.query(Item, User).\
             order_by(Item.name).filter(Item.id == item_id).all()
 
+def addCategory(category):
+    with database_session() as session:
+        category = Category(name = category.lower())
+        session.add(category)
 
 def categoryList():
     with database_session() as session:
-        query = session.query(Item).group_by(Item.category_name).all()
-        return [item.category for item in query]
-
+        query = session.query(Category).all()
+        return [category.name for category in query]
 
 def userList():
     with database_session() as session:
