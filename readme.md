@@ -1,7 +1,7 @@
 # Sort-Port - A simple group inventory tracker
 
 
-## Installation
+## Setup, Installation, and Use
   From within the Sort-Port folder, open a python console and run
   ```
 from app import database
@@ -16,6 +16,7 @@ export OAUTHLIB_RELAX_TOKEN_SCOPE=1
   
   Last but not least, enter your secret key and google id login id/secret into secrets.py 
   
+  To use the application in debug mode, run ```python run.py``` in the sort-port folder
 
 ## Requirements
  * Python 2
