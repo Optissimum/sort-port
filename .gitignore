@@ -3,4 +3,3 @@ env
 *.db
 api_test.py
 Notes
-secrets.py
