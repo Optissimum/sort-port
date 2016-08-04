@@ -1,10 +1,6 @@
 # Sort-Port - A simple group inventory tracker
 
 
-## Feature Support
- * Python 2
-
-
 ## Installation
   From within the Sort-Port folder, open a python console and run
   ```
