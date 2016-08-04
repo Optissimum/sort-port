@@ -4,15 +4,15 @@ from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
 from flask_sqlalchemy import SQLAlchemy
 from flask_cache import Cache
 from contextlib import contextmanager
-from secrets import *
+from .secrets import *
 
 app = Flask(__name__)
 
 # Flask-Dance data
-app.secret_key = secret_key
+app.secret_key = secrets['secret_key']
 blueprint = make_google_blueprint(
-    client_id=login_id,
-    client_secret=login_secret,
+    client_id=secrets['login_id'],
+    client_secret=secrets['login_secret'],
     scope=["profile", "email"],
     reprompt_consent=True
 )
@@ -21,6 +21,7 @@ blueprint = make_google_blueprint(
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 database = SQLAlchemy(app)
+database.create_all()
 
 # Flask Cache
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
