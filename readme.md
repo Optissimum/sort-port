@@ -8,12 +8,14 @@ from app import database
 database.create_all()
   ```
 
-  Also be sure to enable http-approved login with
+  Enable http-approved login on your console
   ```
   export OAUTHLIB_INSECURE_TRANSPORT=1
 export OAUTHLIB_RELAX_TOKEN_SCOPE=1
   ```
-  on your console
+  
+  Last but not least, enter your secret key and google id login id/secret into secrets.py 
+  
 
 ## Requirements
  * Python 2
