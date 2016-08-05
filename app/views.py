@@ -1,5 +1,4 @@
 from app import app, blueprint, database
-import app.dbapi as dbapi
 from flask import (
     render_template, redirect,
     url_for, flash, request,
@@ -11,7 +10,7 @@ from flask_login import (
     LoginManager, current_user,
     login_required, login_user, logout_user
 )
-import models
+import models, dbapi
 from sqlalchemy.orm import exc
 from werkzeug.exceptions import abort
 

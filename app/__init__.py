@@ -21,7 +21,6 @@ blueprint = make_google_blueprint(
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 database = SQLAlchemy(app)
-database.create_all()
 
 # Flask Cache
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
