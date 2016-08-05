@@ -10,7 +10,8 @@ from flask_login import (
     LoginManager, current_user,
     login_required, login_user, logout_user
 )
-import models, dbapi
+import models
+import dbapi
 from sqlalchemy.orm import exc
 from werkzeug.exceptions import abort
 
@@ -46,24 +47,22 @@ def addItem():
     form = models.ItemForm(request.form)
     form.user.choices = dbapi.userList()
     if request.method == 'POST':
-        try:
-            form.validate_on_submit()
-            try:
-                dbapi.addItem(
-                    form.name.data,
-                    form.user.data,
-                    form.category.data,
-                    form.description.data)
-                pass
-            except Exception as e:
-                raise
+        print form.name.data
+        print form.user.data
+        print form.category.data
+        print form.description.data
+        form.validate_on_submit()
+        if dbapi.addItem(
+                form.name.data,
+                form.user.data,
+                form.category.data,
+                form.description.data):
             return redirect(url_for('viewItem',
                                     category=form.category.data,
                                     itemName=form.name.data))
-        except:
-            flash('Error adding {0}. Maybe it already exists within the {1}'
-                  ' category?'.format(str(form.name.data).title(),
-                                      str(form.category.data).title()))
+        else:
+            flash('Error adding {0}. Maybe it already exists within {1}?'.format(
+                str(form.name.data).title(), str(form.category.data).title()))
     return render_template("add.html", form=form)
 
 

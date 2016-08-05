@@ -65,10 +65,12 @@ def addItem(name, userEmail, category, description):
             return False
         except:
             addCategory(category)
+            print 'category added'
             item = Item(name=name,
                         user_email=userEmail,
                         category_name=category,
                         description=description)
+            print 'item created'
             session.add(item)
             return True
 
@@ -115,7 +117,7 @@ def userOfItem(item_id):
 def addCategory(category):
     with database_session() as session:
         category = Category(name=category.lower())
-        if session.query(Category).one():
+        if session.query(Category).first():
             pass
         else:
             session.add(category)
