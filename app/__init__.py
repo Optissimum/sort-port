@@ -4,6 +4,10 @@ from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
 from flask_sqlalchemy import SQLAlchemy
 from flask_cache import Cache
 from secrets import secrets
+import warnings
+from flask.exthook import ExtDeprecationWarning
+
+warnings.simplefilter('ignore', ExtDeprecationWarning)
 
 app = Flask(__name__)
 
@@ -18,7 +22,7 @@ blueprint = make_google_blueprint(
 
 # SQLAlchemy Setup
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///sebastian"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///test.db"
 database = SQLAlchemy(app)
 
 # Flask Cache
