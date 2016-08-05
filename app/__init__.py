@@ -3,7 +3,6 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
 from flask_sqlalchemy import SQLAlchemy
 from flask_cache import Cache
-from contextlib import contextmanager
 from secrets import secrets
 
 app = Flask(__name__)
