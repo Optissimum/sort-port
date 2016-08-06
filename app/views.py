@@ -24,3 +24,15 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return models.User.query.get(int(user_id))
+
+
+# Created views
+@app.route('/',
+           methods=['GET', 'POST'])
+@app.route('/catalog/',
+           methods=['GET', 'POST'])
+@app.route('/index/',
+           methods=['GET', 'POST'])
+def catalog():
+    return render_template('index.html',
+                            categories = api.viewCategories())
