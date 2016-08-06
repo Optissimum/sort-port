@@ -65,7 +65,7 @@ def editItem(id, name, desc, category, email):
             'user_email': email
         }
         if session.query(Item).filter_by(id=id).update(newItem):
-            print addCategory(category)
+            addCategory(category)
             return True
         else:
             return False
@@ -73,8 +73,16 @@ def editItem(id, name, desc, category, email):
 
 def addCategory(name):
     with database_session() as session:
-        if Category.query.filter_by(name=name).count():
+        if Category.query.filter_by(name=name).one():
             return False
         else:
             session.add(Category(name))
+            return True
+
+def addUser(name, email):
+    with database_session() as session:
+        if Users.query.filter_by(email=email).one():
+            return False
+        else:
+            session.add(User(name, email))
             return True
