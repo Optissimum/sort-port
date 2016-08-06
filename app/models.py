@@ -53,6 +53,7 @@ class Category(database.Model):
     def __init__(self, name):
         self.name = name
 
+
 class ItemForm(Form):
     name = TextField(
         'Item', validators=[DataRequired()]
@@ -80,3 +81,5 @@ class UserForm(Form):
 
 blueprint.backend = SQLAlchemyBackend(OAuth, database.session,
                                       cache=cache, user=current_user)
+
+database.create_all()
