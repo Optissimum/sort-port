@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+{% block title %}
+  - List
+{% endblock %}
+{% block content %}
+  <div class="row">
+    <div>
+      {% block categoryList %}
+      <div class="card-panel">
+          {% for category in categories %}
+
+              {{category}}
+            <!-- </a> -->
+          {% endfor %}
+      </div>
+      {% endblock %}
+    </div>
+    <div class="card-panel col-md-6">
+      <div class="panel-body">
+
+        {% block itemList %}{% endblock %}
+
+      </div>
+    </div>
+  </div>
+  {% endblock %}

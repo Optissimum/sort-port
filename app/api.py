@@ -2,6 +2,7 @@ from app import database
 from contextlib import contextmanager
 from models import Item, Category, User
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
 
 
 @contextmanager
@@ -95,10 +96,10 @@ def viewCategories():
         return [category.name for category in Category.query.all()]
 
 
-def addUser(name, email):
+def addUser(user):
     with database_session() as session:
-        if Users.query.filter_by(email=email).one():
+        if session.query(User).filter_by(email=user.email).count() is not 0:
             return False
         else:
-            session.add(User(name, email))
+            session.add(user)
             return True
