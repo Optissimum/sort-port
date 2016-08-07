@@ -1,0 +1,14 @@
+{% extends "index.html" %} {% block title %} Sort Port {% endblock %} {% block content %}
+    {% block categoryList %} {% for category in categories %}
+    <div class="card-event mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__actions mdl-card--border">
+              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="{{url_for('viewCategory', category=category)}}">
+                {{category}}
+              </a>
+            <!-- <div class="mdl-layout-spacer"></div> -->
+        </div>
+    </div>
+    {% endfor %}
+    {% endblock %}
+    {% block items %}{% endblock %}
+    {% endblock %}

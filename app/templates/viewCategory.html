@@ -1,0 +1,66 @@
+{% extends "catalog.html" %} {% block title %} - List {% endblock %}
+{% block styles %}
+  <style>
+      .catalog-card-event.mdl-card {
+          width: 512px;
+          height: 256px;
+          background: #3E4EB8;
+      }
+
+      .catalog-card-event> .mdl-card__actions {
+          border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .catalog-card-event> .mdl-card__title {
+          align-items: flex-start;
+      }
+
+      .catalog-card-event> .mdl-card__title> h4 {
+          margin-top: 0;
+      }
+
+      .catalog-card-event> .mdl-card__actions {
+          display: flex;
+          box-sizing: border-box;
+          align-items: right;
+      }
+
+      .catalog-card-event> .mdl-card__actions> .material-icons {
+          float: right;
+          padding-right: 10px;
+      }
+
+      .catalog-card-event> .mdl-card__title,
+      .catalog-card-event> .mdl-card__actions,
+      .catalog-card-event> .mdl-card__actions> .mdl-button {
+          color: #fff;
+      }
+  </style>
+{% endblock %}
+{% block items %}
+  {% block categoryList %}
+    {% for item in items %}
+      <div class="catalog-card mdl-card mdl-shadow--2dp" >
+          <div class="mdl-card__title mdl-card--expand">
+              <h4>
+                  {{item['name'].title()}}
+                </h4>
+          </div>
+          <div class="mdl-card__supporting-text">
+              {{item['description']}}
+          </div>
+          <div class="mdl-card__actions mdl-card--border" id={{item['name']}}>
+              <div class="mdl-layout-spacer"></div>
+              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="url_for('viewItem', item=getItem(item.id))}}">View</a>
+              <!-- <div class="mdl-layout-spacer"></div> -->
+              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="url_for('editItem', item=getItem(item.id))}}">Edit</a>
+          </div>
+      </div>
+      <span class="mdl-tooltip mdl-tooltip--small" for={{item['name']}}>
+        {{item['user'].title()[:16]}}
+      </span>
+
+      <br>
+    {% endfor %}
+  {% endblock %}
+{% endblock %}
