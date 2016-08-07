@@ -41,7 +41,7 @@ class Item(database.Model):
 
     def __init__(self, name, category, description, user):
         self.name = name
-        self.category = category
+        self.category_name = category
         self.description = description
         self.user = user
 
