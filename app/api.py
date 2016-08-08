@@ -51,16 +51,12 @@ def viewItem(name=None, user=None, category=None, description=None):
     with database_session() as session:
         query = session.query(Item)
         if name is not None:
-            print 'Adding' + name
             query = query.filter_by(name=name)
         if user is not None:
-            print 'Adding' + user
             query = query.filter_by(user_email=user)
         if category is not None:
-            print 'Adding' + category
             query = query.filter_by(category_name=category)
         if description is not None:
-            print 'Adding' + description
             query = query.filter_by(description=description)
         query = query.first()
         output = {
@@ -121,9 +117,12 @@ def viewCategories():
         return [category.name for category in Category.query.all()]
 
 
-def viewCategory(name):
+def viewCategory(category):
     with database_session() as session:
-        return [category.name for category in session.query(Category).all()]
+        output = {}
+        for item in Item.query.filter(category==category).all():
+            output[item.name] = getItem(item.id)
+        return output
 
 
 def addUser(user):
