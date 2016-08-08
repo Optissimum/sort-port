@@ -116,11 +116,10 @@ def viewItem(category, itemName):
 
 @app.route('/catalog/<string:category>/')
 def viewCategory(category):
-    # TODO create category list
     try:
-        return render_template('itemlist.html',
+        return render_template('items.html',
                                category=api.viewCategories(),
-                               items=api.viewCategory(category),
+                               itemList=api.viewCategory(category),
                                currentCategory=category.title())
     except AttributeError:
         abort(404)
@@ -169,7 +168,7 @@ def logout():
 
 @app.route('/login/')
 def login():
-    return redirect(login.google)
+    return redirect(url_for('google.login'))
 
 
 # JSON views
