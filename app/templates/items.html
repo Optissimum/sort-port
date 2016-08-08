@@ -1,37 +1,26 @@
-{% extends "index.html" %} {% block title %} - List {% endblock %} {% block style %}
-<style>
-    .catalog-card-wide.mdl-card {
-        width: 512px;
-    }
+{% extends "index.html" %} {% block title %} - List {% endblock %}
+{% block items %}
+  {% for item in itemList %}
+    <div class="item-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">{{item['name']}}</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+          {{item['description']}}
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
 
-    .catalog-card-wide> .mdl-card__title {
-        color: #fff;
-        height: 176px;
-    }
-
-    .catalog-card-wide> .mdl-card__menu {
-        color: #fff;
-    }
-</style>
-{% endblock %} {% block items %} {% for item in items %}
-<div class="catalog-card-wide mdl-card mdl-shadow--2dp">
-    <div class="mdl-card__title">
-        <h2 class="mdl-card__title-text">{{item['name']}}</h2>
+            </a>
+        </div>
+        {% if item['user'] == current_user.get_id(): %}
+          <div class="mdl-card__menu">
+              <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                  <i class="material-icons">edit</i>
+              </button>
+          </div>
+        {% endif %}
     </div>
-    <div class="mdl-card__supporting-text">
-      {{item['description']}}
-    </div>
-    <div class="mdl-card__actions mdl-card--border">
-        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-
-        </a>
-    </div>
-    {% if {{item['user'] is current_user.get_id()}} %}
-      <div class="mdl-card__menu">
-          <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-              <i class="material-icons">edit</i>
-          </button>
-      </div>
-    {% endif %}
-</div>
-<br> {% endfor %} {% endblock %}
+    <br>
+  {% endfor %}
+{% endblock %}
