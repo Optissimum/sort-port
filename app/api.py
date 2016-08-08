@@ -138,3 +138,7 @@ def userList():
     with database_session() as session:
         query = session.query(User).all()
         return [(user.email, user.name) for user in query]
+
+def getUserId():
+    with database_session() as session:
+        return int(session.query(User).filter_by(email=user.email).one().id)
