@@ -1,5 +1,4 @@
 env
 *.pyc
 *.db
-api_test.py
 Notes
