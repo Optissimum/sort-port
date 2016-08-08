@@ -37,7 +37,7 @@ def load_user(user_id):
            methods=['GET', 'POST'])
 def catalog():
     return render_template('categorylist.html',
-                           categoryList=dbapi.categoryList())
+                           categoryList=api.viewCategories())
 
 
 @app.route('/add/', methods=['GET', 'POST'])
@@ -45,18 +45,14 @@ def catalog():
 @login_required
 def addItem():
     form = models.ItemForm(request.form)
-    form.user.choices = dbapi.userList()
+    form.user.choices = api.userList()
     if request.method == 'POST':
-        print form.name.data
-        print form.user.data
-        print form.category.data
-        print form.description.data
         form.validate_on_submit()
-        if dbapi.addItem(
-                form.name.data,
-                form.user.data,
-                form.category.data,
-                form.description.data):
+        item = Item(form.name.data,
+        form.user.data,
+        form.category.data,
+        form.description.data)
+        if api.addItem(item):
             return redirect(url_for('viewItem',
                                     category=form.category.data,
                                     itemName=form.name.data))
@@ -123,11 +119,11 @@ def viewCategory(category):
     # TODO create category list
     try:
         return render_template('itemlist.html',
-                               category=dbapi.categoryList(),
-                               items=dbapi.itemList(category),
+                               category=api.viewCategories(),
+                               items=api.viewCategory(category),
                                currentCategory=category.title())
     except AttributeError:
-        abort()
+        abort(404)
 
 
 # Login views, partially pulled from flask-dance quick-start example
@@ -173,13 +169,13 @@ def logout():
 
 @app.route('/login/')
 def login():
-    return render_template('login.html')
+    return redirect(login.google)
 
 
 # JSON views
 @app.route('/catalog/<string:category>/<string:itemName>/json')
-def getItem(name, category):
-    item = dbapi.itemInfo(name, category)
+def getItemJSON(name, category):
+    item = viewItem(name=name, category=category)
     return jsonify(name=item['name'],
                    category=item['category'],
                    owner=item['user'],
@@ -187,8 +183,8 @@ def getItem(name, category):
 
 
 @app.route('/catalog/<string:category>/json')
-def getCategory(category):
-    category = dbapi.itemList(category)
+def getCategoryJSON(category):
+    category = api.viewCategory(category)
     return jsonify(name=item['name'],
                    category=item['category'],
                    owner=item['user'])

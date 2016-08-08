@@ -5,6 +5,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cache import Cache
 from contextlib import contextmanager
 from .secrets import *
+import warnings
+from flask.exthook import ExtDeprecationWarning
+
+warnings.simplefilter('ignore', ExtDeprecationWarning)
 
 app = Flask(__name__)
 
