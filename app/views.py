@@ -36,8 +36,8 @@ def load_user(user_id):
 @app.route('/index/',
            methods=['GET', 'POST'])
 def catalog():
-    return render_template('categorylist.html',
-                           categoryList=api.viewCategories())
+    return render_template('catalog.html',
+                           categories=api.viewCategories())
 
 
 @app.route('/add/', methods=['GET', 'POST'])
