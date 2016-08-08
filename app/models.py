@@ -1,5 +1,4 @@
 from app import app, database, blueprint, cache
-from flask_sqlalchemy import SQLAlchemy
 from flask_dance.consumer.backend.sqla import (OAuthConsumerMixin,
                                                SQLAlchemyBackend)
 from flask_login import LoginManager, UserMixin, current_user
@@ -15,6 +14,9 @@ class User(database.Model, UserMixin):
     email = database.Column(database.String(256), unique=True)
     name = database.Column(database.String(256))
 
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
 
 class OAuth(database.Model, OAuthConsumerMixin):
     __tablename__ = 'oauth'
@@ -37,13 +39,20 @@ class Item(database.Model):
                                  database.ForeignKey('user.email'))
     user = database.relationship("User", uselist=False, backref="user")
 
+    def __init__(self, name, category, description, user):
+        self.name = name
+        self.category_name = category
+        self.description = description
+        self.user = user
 
 class Category(database.Model):
     __tablename__ = 'category'
 
-    id = database.Column(database.Integer, primary_key=True)
-    name = database.Column(database.String(256), unique=True)
-  
+    name = database.Column(database.String(256), primary_key=True)
+
+    def __init__(self, name):
+        self.name = name
+
 
 class ItemForm(Form):
     name = TextField(
@@ -72,3 +81,5 @@ class UserForm(Form):
 
 blueprint.backend = SQLAlchemyBackend(OAuth, database.session,
                                       cache=cache, user=current_user)
+
+database.create_all()
