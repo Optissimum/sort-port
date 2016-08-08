@@ -19,7 +19,7 @@ blueprint = make_google_blueprint(
 
 # SQLAlchemy Setup
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2:///sortport'
 database = SQLAlchemy(app)
 
 # Flask Cache
