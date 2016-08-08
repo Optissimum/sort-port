@@ -11,7 +11,7 @@ from flask_login import (
     login_required, login_user, logout_user
 )
 import models
-import dbapi
+import api
 from sqlalchemy.orm import exc
 from werkzeug.exceptions import abort
 

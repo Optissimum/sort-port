@@ -19,10 +19,10 @@ blueprint = make_google_blueprint(
 
 # SQLAlchemy Setup
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2:///sortport'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2:///sortport'
 database = SQLAlchemy(app)
 
 # Flask Cache
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
-from app import views, models, dbapi
+from app import views, models, api
