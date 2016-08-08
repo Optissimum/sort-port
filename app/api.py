@@ -119,9 +119,9 @@ def viewCategories():
 
 def viewCategory(category):
     with database_session() as session:
-        output = {}
+        output = []
         for item in Item.query.filter(category==category).all():
-            output[item.name] = getItem(item.id)
+            output.append(getItem(item.id))
         return output
 
 
