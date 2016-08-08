@@ -39,12 +39,37 @@ def getItem(id):
             output = {
                 'id': q.id,
                 'name': q.name,
-                'category_name': q.category_name,
+                'category': q.category_name,
                 'description': q.description,
                 'user': q.user_email}
             return output
         except:
             return False
+
+
+def viewItem(name=None, user=None, category=None, description=None):
+    with database_session() as session:
+        query = session.query(Item)
+        if name is not None:
+            print 'Adding' + name
+            query = query.filter_by(name=name)
+        if user is not None:
+            print 'Adding' + user
+            query = query.filter_by(user_email=user)
+        if category is not None:
+            print 'Adding' + category
+            query = query.filter_by(category_name=category)
+        if description is not None:
+            print 'Adding' + description
+            query = query.filter_by(description=description)
+        query = query.first()
+        output = {
+            'id': query.id,
+            'name': query.name,
+            'category': query.category_name,
+            'description': query.description,
+            'user': query.user_email}
+        return output
 
 
 def addItem(item):
@@ -96,6 +121,11 @@ def viewCategories():
         return [category.name for category in Category.query.all()]
 
 
+def viewCategory(name):
+    with database_session() as session:
+        return [category.name for category in session.query(Category).all()]
+
+
 def addUser(user):
     with database_session() as session:
         if session.query(User).filter_by(email=user.email).count() is not 0:
@@ -103,3 +133,9 @@ def addUser(user):
         else:
             session.add(user)
             return True
+
+
+def userList():
+    with database_session() as session:
+        query = session.query(User).all()
+        return [(user.email, user.name) for user in query]
